@@ -22,6 +22,8 @@
         <header class="border-b border-neutral-800 pb-4 flex items-baseline justify-between">
             <div>
                 <h1 class="text-xl font-bold font-mono tracking-tight text-neutral-100">interest_stack</h1>
+                <br>
+                <p style="font-size: 0.75em;">(一番上が今自分がせかせかと取り組んでいるプロジェクト)</p>
             </div>
             <div class="text-xs font-mono text-neutral-500">
                 UPDATED: <span id="updated-at" class="text-neutral-400">--</span>
@@ -44,12 +46,32 @@
     </div>
 
     <script>
+        // ISO時刻文字列を日本時間 (YYYY-MM-DD HH:mm:ss) に整形する関数
+        function formatJST(isoString) {
+            if (!isoString) return '--';
+            const date = new Date(isoString);
+            if (isNaN(date.getTime())) return '--';
+
+            // 日本の標準時 (Asia/Tokyo) でフォーマット
+            return date.toLocaleString('ja-JP', {
+                timeZone: 'Asia/Tokyo',
+                year: 'numeric',
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
+                hour12: false // 24時間表記
+            }).replace(/\//g, '-'); // YYYY/MM/DD を YYYY-MM-DD に変換
+        }
+
         async function renderStack() {
             try {
                 const res = await fetch('./stack.json?cache=' + Date.now());
                 const data = await res.json();
 
-                document.getElementById('updated-at').textContent = new Date(data.updated_at).toISOString().split('T')[0];
+                // 日本時間 (YYYY-MM-DD HH:mm:ss) で表示
+                document.getElementById('updated-at').textContent = formatJST(data.updated_at);
 
                 const container = document.getElementById('stack-container');
                 container.innerHTML = '';
