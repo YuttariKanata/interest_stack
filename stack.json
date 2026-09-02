@@ -2,17 +2,17 @@
     "stack": [
         {
             "context": "",
-            "id": "frame-8",
-            "link": "",
-            "pushed_at": "2026-09-03",
-            "title": "へっぉあ７"
-        },
-        {
-            "context": "",
             "id": "frame-7",
             "link": "",
             "pushed_at": "2026-09-03",
             "title": "へｌｌ４"
+        },
+        {
+            "context": "",
+            "id": "frame-8",
+            "link": "",
+            "pushed_at": "2026-09-03",
+            "title": "へっぉあ７"
         },
         {
             "context": "",
@@ -84,5 +84,5 @@
             "title": "ファイゲンバウム定数の高精度計算と分岐図の解析"
         }
     ],
-    "updated_at": "2026-09-02T19:56:08Z"
+    "updated_at": "2026-09-02T19:59:17Z"
 }
