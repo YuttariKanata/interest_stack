@@ -12,11 +12,6 @@
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
-// Windows IME 連動用
-#define GLFW_EXPOSE_NATIVE_WIN32
-#include <GLFW/glfw3native.h>
-#include <windows.h>
-
 #include "single_include/json.hpp"
 
 using json = nlohmann::json;
@@ -105,12 +100,6 @@ int main() {
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    // Win32 HWND 渡して IME 変換ウィンドウをカーソル位置に連動させる
-    HWND hwnd = glfwGetWin32Window(window);
-    if (hwnd) {
-        io.ImeWindowHandle = hwnd;
-    }
-
     char buf_title[256] = "";
     char buf_context[2048] = "";
     char buf_link[512] = "";
@@ -193,9 +182,14 @@ int main() {
                             ofs << j.dump(4) << std::endl;
                             ofs.close();
 
-                            // Git コマンド実行（ログ出力用のリダイレクト修正）
-                            std::string git_cmd = "cmd.exe /c \"cd /d .. && git add stack.json && git commit -m \\\"push: " + std::string(buf_title) + "\\\" && git push\" > git_output.log 2>&1";
+                            std::ofstream msg_file("commit_msg.txt");
+                            msg_file << "push: " << buf_title << std::endl;
+                            msg_file.close();
+
+                            std::string git_cmd = "cmd.exe /c \"cd /d .. && git add stack.json && git commit -F app/commit_msg.txt && git push\" > git_output.log 2>&1";
                             int res = std::system(git_cmd.c_str());
+
+                            std::remove("commit_msg.txt");
 
                             if (res == 0) {
                                 glfwSetWindowShouldClose(window, GLFW_TRUE);

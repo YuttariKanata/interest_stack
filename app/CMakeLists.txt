@@ -1,34 +1,28 @@
-cmake_minimum_required(VERSION 3.14)
-project(interest_stack_pusher CXX)
+cmake_minimum_required(VERSION 3.10)
+project(interest_stack)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# GLFW & OpenGL
-find_package(PkgConfig REQUIRED)
-find_package(OpenGL REQUIRED)
-find_package(glfw3 REQUIRED)
+# --- IME 有効化マクロを定義 ---
+# プロジェクト全体（ImGuiのソースコードを含む）に定義を伝播させる
+add_compile_definitions(IMGUI_ENABLE_WIN32_DEFAULT_IME_FUNCTIONS)
 
-# ImGui 側のソースコード指定（事前にimguiリポジトリから持ってきている前提）
-set(IMGUI_DIR ./imgui)
-file(GLOB IMGUI_SOURCES
-    ${IMGUI_DIR}/imgui.cpp
-    ${IMGUI_DIR}/imgui_draw.cpp
-    ${IMGUI_DIR}/imgui_tables.cpp
-    ${IMGUI_DIR}/imgui_widgets.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_glfw.cpp
-    ${IMGUI_DIR}/backends/imgui_impl_opengl3.cpp
+# ソースファイルの指定
+add_executable(istack_push
+    main.cpp
+    # もし ImGui や GLFW バックエンドを直接コンパイル対象に含めている場合はここに追加されています
+    # imgui/imgui.cpp
+    # imgui/imgui_draw.cpp
+    # imgui/imgui_tables.cpp
+    # imgui/imgui_widgets.cpp
+    # imgui/backends/imgui_impl_glfw.cpp
+    # imgui/backends/imgui_impl_opengl3.cpp
 )
 
-add_executable(istack_push main.cpp ${IMGUI_SOURCES})
-
-target_include_directories(istack_push PRIVATE
-    ${IMGUI_DIR}
-    ${IMGUI_DIR}/backends
-    ${CMAKE_CURRENT_SOURCE_DIR}
-)
-
+# リンクライブラリに imm32 を追加
+# (Win32 APIの IME 制御モジュール ImmSetCompositionWindow 等のために必須)
 target_link_libraries(istack_push PRIVATE
     glfw
-    OpenGL::GL
-    ${CMAKE_DL_LIBS}
+    opengl32
+    imm32.lib
 )
