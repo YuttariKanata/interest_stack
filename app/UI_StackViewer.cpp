@@ -23,33 +23,44 @@ void UI_StackViewer::Render(AppState& state, float base_scale) {
         float padding_y = 10.0f * base_scale;
         float menu_btn_width = 45.0f * base_scale;
 
-        // --- 1. テキストを描画して高さを自動計算 ---
-        ImGui::SetCursorScreenPos(ImVec2(start_pos.x + padding_x, start_pos.y + padding_y));
+        // Lambda でテキスト描画処理を共通化
+        auto RenderCardText = [&]() {
+            ImGui::SetCursorScreenPos(ImVec2(start_pos.x + padding_x, start_pos.y + padding_y));
+            ImGui::BeginGroup();
+            ImGui::PushTextWrapPos(start_pos.x + avail_width - menu_btn_width);
 
-        ImGui::BeginGroup();
-        // ... ボタンと被らないようにテキストを自動折り返し
-        ImGui::PushTextWrapPos(start_pos.x + avail_width - menu_btn_width);
+            ImGui::TextUnformatted(title.c_str());
+            ImGui::SameLine();
+            ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "(%s)", date.c_str());
 
-        ImGui::TextUnformatted(title.c_str());
-        ImGui::SameLine();
-        ImGui::TextColored(ImVec4(0.5f, 0.5f, 0.5f, 1.0f), "(%s)", date.c_str());
+            if (!context.empty()) {
+                ImGui::Spacing();
+                ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "%s", context.c_str());
+            }
 
-        if (!context.empty()) {
-            ImGui::Spacing();
-            ImGui::TextColored(ImVec4(0.8f, 0.8f, 0.8f, 1.0f), "%s", context.c_str());
-        }
+            ImGui::PopTextWrapPos();
+            ImGui::EndGroup();
+        };
 
-        ImGui::PopTextWrapPos();
-        ImGui::EndGroup();
+        // --- 1. 1回目のテキスト描画（高さ計測用） ---
+        RenderCardText();
 
-        // 描画されたテキストの高さからカードの高さを決定
+        // 描画された結果からカードの高さを確定
         float card_height = ImGui::GetItemRectSize().y + padding_y * 2.0f;
         ImVec2 end_pos = ImVec2(start_pos.x + avail_width, start_pos.y + card_height);
 
-        // --- 2. カード全体を覆う D&D / クリック用不可視ボタン ---
-        ImGui::SetCursorScreenPos(start_pos);
+        // --- 2. 背景・枠線の描画（ここで 1回目 のテキストの上に重ねて塗りつぶす） ---
+        ImDrawList* draw_list = ImGui::GetWindowDrawList();
         
-        // 次に配置される ... ボタンにクリックイベントを通す設定
+        // 好きな背景色（ImGuiCol_FrameBg や任意の ImColor）
+        ImU32 bg_color = ImGui::GetColorU32(ImGuiCol_FrameBg); 
+        ImU32 border_color = ImGui::GetColorU32(ImGuiCol_Border);
+
+        draw_list->AddRectFilled(start_pos, end_pos, bg_color, 8.0f);
+        draw_list->AddRect(start_pos, end_pos, border_color, 8.0f);
+
+        // --- 3. D&D・ヒットボックス（InvisibleButton） ---
+        ImGui::SetCursorScreenPos(start_pos);
         ImGui::SetNextItemAllowOverlap();
         ImGui::InvisibleButton("##card_selectable", ImVec2(avail_width, card_height));
 
@@ -69,7 +80,10 @@ void UI_StackViewer::Render(AppState& state, float base_scale) {
             ImGui::EndDragDropTarget();
         }
 
-        // --- 3. ... ボタン（右上） ---
+        // --- 4. 2回目のテキスト描画（背景の上にクッキリ描画） ---
+        RenderCardText();
+
+        // --- 5. ... ボタン（右上） ---
         ImGui::SetCursorScreenPos(ImVec2(end_pos.x - 45.0f * base_scale, start_pos.y + 8.0f * base_scale));
         if (ImGui::Button("...", ImVec2(35.0f * base_scale, 0))) {
             ImGui::OpenPopup("CardMenu");
