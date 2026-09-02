@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ja" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>interest_stack</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&family=Inter:wght@400;500;600&display=swap');
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background-color: #09090b;
+            color: #f4f4f5;
+        }
+        .font-mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
+</head>
+<body class="min-h-screen p-4 md:p-12 font-sans antialiased text-neutral-200">
+    <div class="max-w-3xl mx-auto space-y-8">
+        
+        <!-- Header -->
+        <header class="border-b border-neutral-800 pb-4 flex items-baseline justify-between">
+            <div>
+                <h1 class="text-xl font-bold font-mono tracking-tight text-neutral-100">interest_stack</h1>
+            </div>
+            <div class="text-xs font-mono text-neutral-500">
+                UPDATED: <span id="updated-at" class="text-neutral-400">--</span>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <main class="space-y-3">
+            <div id="stack-container" class="space-y-3">
+                <div class="p-4 text-center font-mono text-xs text-neutral-600">
+                    Loading stack...
+                </div>
+            </div>
+        </main>
+
+        <!-- Footer -->
+        <footer class="pt-8 text-xs font-mono text-neutral-600 border-t border-neutral-900">
+            <span>interest_stack / raw: <a href="./stack.json" class="underline hover:text-neutral-400">stack.json</a></span>
+        </footer>
+    </div>
+
+    <script>
+        async function renderStack() {
+            try {
+                const res = await fetch('./stack.json?cache=' + Date.now());
+                const data = await res.json();
+
+                document.getElementById('updated-at').textContent = new Date(data.updated_at).toISOString().split('T')[0];
+
+                const container = document.getElementById('stack-container');
+                container.innerHTML = '';
+
+                data.stack.forEach((item, index) => {
+                    const isTop = index === 0;
+                    const depth = index;
+                    
+                    const card = document.createElement(item.link ? 'a' : 'div');
+                    
+                    if (item.link) {
+                        card.href = item.link;
+                        card.target = '_blank';
+                        card.rel = 'noopener noreferrer';
+                    }
+
+                    card.className = `block p-4 border rounded font-sans transition-all ${
+                        isTop 
+                            ? 'bg-neutral-900/80 border-neutral-400 text-neutral-100' 
+                            : 'bg-neutral-950/40 border-neutral-800/80 text-neutral-400'
+                    } ${item.link ? 'hover:border-neutral-500 hover:bg-neutral-900/50 cursor-pointer' : ''}`;
+
+                    card.innerHTML = `
+                        <div class="flex items-baseline justify-between gap-4 mb-2">
+                            <div class="flex items-baseline gap-2.5">
+                                <span class="font-mono text-xs ${isTop ? 'text-neutral-100 font-bold' : 'text-neutral-600'}">
+                                    ${isTop ? '>' : `[${depth}]`}
+                                </span>
+                                <h2 class="text-sm font-semibold tracking-tight ${isTop ? 'text-neutral-100' : 'text-neutral-300'} flex items-center gap-1.5">
+                                    ${item.title}
+                                </h2>
+                            </div>
+                            <span class="font-mono text-[11px] text-neutral-500 shrink-0">
+                                ${item.pushed_at}
+                            </span>
+                        </div>
+
+                        ${item.context ? `
+                            <p class="text-xs text-neutral-400 leading-relaxed mb-3 pl-5 border-l border-neutral-800">
+                                ${item.context}
+                            </p>
+                        ` : ''}
+
+                        <div class="flex items-center justify-between pl-5 text-[11px] font-mono text-neutral-500">
+                            <div class="flex items-center gap-2 flex-wrap">
+                                ${(item.tags || []).map(tag => `<span>#${tag}</span>`).join('')}
+                            </div>
+                            ${item.link ? `
+                                <span class="text-neutral-500 group-hover:text-neutral-300 font-mono text-[11px]">
+                                    ${new URL(item.link).hostname}
+                                </span>
+                            ` : ''}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+
+            } catch (e) {
+                console.error(e);
+                document.getElementById('stack-container').innerHTML = `
+                    <div class="p-3 text-neutral-500 font-mono text-xs border border-neutral-800">
+                        Error loading stack.json
+                    </div>
+                `;
+            }
+        }
+
+        renderStack();
+    </script>
+</body>
+</html>
