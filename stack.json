@@ -1,126 +1,26 @@
 {
     "stack": [
         {
-            "context": "あああああれれ",
-            "id": "frame-17",
+            "context": "",
+            "id": "frame-18",
+            "link": "",
+            "pushed_at": "2026-09-03",
+            "title": "へっぉ"
+        },
+        {
+            "context": "おはよう朝日",
+            "id": "frame-18",
             "link": "https://ja.wikipedia.org/wiki/イチジク",
             "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "あれれれ４"
+            "title": "えええええ６"
         },
         {
             "context": "あああ１あああ１",
             "id": "frame-16",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "link": "https://ja.wikipedia.org/wiki/イチジク２",
             "pushed_at": "2026-09-03",
             "tags": [],
-            "title": "あああ４"
-        },
-        {
-            "context": "ああああ４",
-            "id": "frame-15",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "あああ４"
-        },
-        {
-            "context": "あああ３",
-            "id": "frame-14",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "あ３"
-        },
-        {
-            "context": "ああ４",
-            "id": "frame-13",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "あ４"
-        },
-        {
-            "context": "けんぴいもは\nかくうのことば素数\n鬱",
-            "id": "frame-12",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "けんぴいも"
-        },
-        {
-            "context": "けんぴいもは\nかくうのことば素数\n鬱",
-            "id": "frame-11",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "けんぴいも"
-        },
-        {
-            "context": "けんぴいもは\nかくうのことば素数\n鬱",
-            "id": "frame-10",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "けんぴいも"
-        },
-        {
-            "context": "コンチネンタル",
-            "id": "frame-9",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "こんにちは"
-        },
-        {
-            "context": "でもｄめおwhatwatt",
-            "id": "frame-8",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [],
-            "title": "でもでも"
-        },
-        {
-            "context": "デモンストレーション",
-            "id": "frame-7",
-            "link": "https://ja.wikipedia.org/wiki/イチジク",
-            "pushed_at": "2026-09-03",
-            "tags": [
-                "",
-                ""
-            ],
-            "title": "でも"
-        },
-        {
-            "context": "こんにちんちん！えぐ\nこうさ、左上に出るのやめてほしい",
-            "id": "frame-6",
-            "link": "https://ja.wikipedia.org/wiki/福岡県西方沖地震",
-            "pushed_at": "2026-09-03",
-            "tags": [
-                ""
-            ],
-            "title": "hello セックス"
-        },
-        {
-            "context": "this\nis\ntest\n2",
-            "id": "frame-5",
-            "link": "www.example.co",
-            "pushed_at": "2026-09-03",
-            "tags": [
-                ""
-            ],
-            "title": "test2"
-        },
-        {
-            "context": "this is test fooo!!",
-            "id": "frame-4",
-            "link": "www.example.com",
-            "pushed_at": "2026-09-03",
-            "tags": [
-                "",
-                ""
-            ],
-            "title": "test"
+            "title": "あああ１７２９"
         },
         {
             "context": "自分の思考・プロジェクトの文脈をLIFO（スタック）構造で可視化・公開する取り組み。",
@@ -170,5 +70,5 @@
             "title": "ファイゲンバウム定数の高精度計算と分岐図の解析"
         }
     ],
-    "updated_at": "2026-09-02T19:23:47Z"
+    "updated_at": "2026-09-02T19:29:03Z"
 }
