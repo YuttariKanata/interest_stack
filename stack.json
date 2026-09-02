@@ -1,6 +1,22 @@
 {
     "stack": [
         {
+            "context": "ああああ４",
+            "id": "frame-15",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "tags": [],
+            "title": "あああ４"
+        },
+        {
+            "context": "あああ３",
+            "id": "frame-14",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "tags": [],
+            "title": "あ３"
+        },
+        {
             "context": "ああ４",
             "id": "frame-13",
             "link": "https://ja.wikipedia.org/wiki/イチジク",
@@ -138,5 +154,5 @@
             "title": "ファイゲンバウム定数の高精度計算と分岐図の解析"
         }
     ],
-    "updated_at": "2026-09-02T18:18:38Z"
+    "updated_at": "2026-09-02T18:24:07Z"
 }
