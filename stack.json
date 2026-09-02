@@ -1,37 +1,63 @@
 {
-    "updated_at": "2026-09-03T00:08:00Z",
     "stack": [
         {
-            "id": "interest-stack",
-            "title": "interest_stack",
+            "context": "this is test fooo!!",
+            "id": "frame-4",
+            "link": "www.example.com",
             "pushed_at": "2026-09-03",
+            "tags": [
+                "",
+                ""
+            ],
+            "title": "test"
+        },
+        {
             "context": "自分の思考・プロジェクトの文脈をLIFO（スタック）構造で可視化・公開する取り組み。",
+            "id": "interest-stack",
             "link": "https://github.com/YuttariKanata/interest_stack",
-            "tags": ["GitHubPages", "UI", "DX"]
+            "pushed_at": "2026-09-03",
+            "tags": [
+                "GitHubPages",
+                "UI",
+                "DX"
+            ],
+            "title": "interest_stack"
         },
         {
-            "id": "fast-isqrt",
-            "title": "fast_isqrt",
-            "pushed_at": "2026-08-20",
             "context": "高速な整数平方根（integer square root）計算アルゴリズムの実装・検証。",
+            "id": "fast-isqrt",
             "link": "https://github.com/YuttariKanata/fast_isqrt",
-            "tags": ["Algorithm", "Julia", "Math"]
+            "pushed_at": "2026-08-20",
+            "tags": [
+                "Algorithm",
+                "Julia",
+                "Math"
+            ],
+            "title": "fast_isqrt"
         },
         {
-            "id": "conditional-range",
-            "title": "ConditionalRange",
-            "pushed_at": "2026-08-10",
             "context": "条件付きレンジ構造の設計とイテレータ最適化。",
+            "id": "conditional-range",
             "link": "https://github.com/YuttariKanata/ConditionalRange",
-            "tags": ["Julia", "DataStructure"]
+            "pushed_at": "2026-08-10",
+            "tags": [
+                "Julia",
+                "DataStructure"
+            ],
+            "title": "ConditionalRange"
         },
         {
-            "id": "feigenbaum-constants",
-            "title": "ファイゲンバウム定数の高精度計算と分岐図の解析",
-            "pushed_at": "2026-07-25",
             "context": "カオス理論における分岐周期倍化の幾何級数的収束比率（δ, α）の数値的探索。",
+            "id": "feigenbaum-constants",
             "link": "https://ja.wikipedia.org/wiki/%E3%83%95%E3%82%A1%E3%82%A4%E3%82%B2%E3%83%B3%E3%83%90%E3%82%A6%E3%83%A0%E5%AE%9A%E6%95%B0",
-            "tags": ["Math", "Chaos", "Constants"]
+            "pushed_at": "2026-07-25",
+            "tags": [
+                "Math",
+                "Chaos",
+                "Constants"
+            ],
+            "title": "ファイゲンバウム定数の高精度計算と分岐図の解析"
         }
-    ]
+    ],
+    "updated_at": "2026-09-02T15:42:24Z"
 }
