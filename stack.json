@@ -37,6 +37,13 @@
             "title": "あああ１７２９"
         },
         {
+            "context": "COntextって何かいたらいいか分からんよね\n俺も分からない",
+            "id": "frame-9",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "title": "てｓつとtest 10"
+        },
+        {
             "context": "自分の思考・プロジェクトの文脈をLIFO（スタック）構造で可視化・公開する取り組み。",
             "id": "interest-stack",
             "link": "https://github.com/YuttariKanata/interest_stack",
@@ -84,5 +91,5 @@
             "title": "ファイゲンバウム定数の高精度計算と分岐図の解析"
         }
     ],
-    "updated_at": "2026-09-02T19:59:59Z"
+    "updated_at": "2026-09-02T20:03:59Z"
 }
