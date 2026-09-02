@@ -3,14 +3,19 @@ project(interest_stack)
 
 set(CMAKE_CXX_STANDARD 17)
 
-# --- IME 有効化マクロを定義 ---
-# プロジェクト全体（ImGuiのソースコードを含む）に定義を伝播させる
+# --- IME 有効化マクロを全体に定義 ---
 add_compile_definitions(IMGUI_ENABLE_WIN32_DEFAULT_IME_FUNCTIONS)
 
-# ソースファイルの指定
+# インクルードディレクトリの追加（カレントディレクトリと ImGui のパス）
+include_directories(. imgui imgui/backends)
+
+# ソースファイルの指定（新規作成したファイルをすべて追加）
 add_executable(istack_push
     main.cpp
-    # もし ImGui や GLFW バックエンドを直接コンパイル対象に含めている場合はここに追加されています
+    AppState.cpp
+    UI_InputForm.cpp
+    UI_StackViewer.cpp
+    # もし ImGui や GLFW バックエンドの .cpp を直接コンパイルしている場合はここにも記述
     # imgui/imgui.cpp
     # imgui/imgui_draw.cpp
     # imgui/imgui_tables.cpp
@@ -19,10 +24,9 @@ add_executable(istack_push
     # imgui/backends/imgui_impl_opengl3.cpp
 )
 
-# リンクライブラリに imm32 を追加
-# (Win32 APIの IME 制御モジュール ImmSetCompositionWindow 等のために必須)
+# リンクライブラリの指定 (Win32 IME 用の imm32 も追加)
 target_link_libraries(istack_push PRIVATE
     glfw
     opengl32
-    imm32.lib
+    imm32
 )

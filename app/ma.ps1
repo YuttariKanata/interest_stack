@@ -45,8 +45,12 @@ if (-not (Test-Path $ImguiDir)) {
 $Gxx = "C:/msys64/ucrt64/bin/g++.exe"
 $OutExe = Join-Path $BuildDir "istack_push.exe"
 
-$Sources = @(
+# 例: ソースファイルの配列に追加
+$sources = @(
     "main.cpp",
+    "AppState.cpp",
+    "UI_InputForm.cpp",
+    "UI_StackViewer.cpp",
     "imgui/imgui.cpp",
     "imgui/imgui_draw.cpp",
     "imgui/imgui_tables.cpp",

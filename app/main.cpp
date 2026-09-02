@@ -1,54 +1,16 @@
 #include <iostream>
-#include <fstream>
-#include <string>
-#include <vector>
-#include <chrono>
-#include <iomanip>
-#include <sstream>
-#include <cstdlib>
-
 #include "imgui.h"
 #include "imgui_impl_glfw.h"
 #include "imgui_impl_opengl3.h"
 #include <GLFW/glfw3.h>
 
-#include "single_include/json.hpp"
+#include "AppState.hpp"
+#include "UI_InputForm.hpp"
+#include "UI_StackViewer.hpp"
 
-using json = nlohmann::json;
-
-std::string get_current_time_iso() {
-    auto now = std::chrono::system_clock::now();
-    auto in_time_t = std::chrono::system_clock::to_time_t(now);
-    std::stringstream ss;
-    ss << std::put_time(std::gmtime(&in_time_t), "%Y-%m-%dT%H:%M:%SZ");
-    return ss.str();
-}
-
-std::string get_current_date() {
-    auto now = std::chrono::system_clock::now();
-    auto in_time_t = std::chrono::system_clock::to_time_t(now);
-    std::stringstream ss;
-    ss << std::put_time(std::localtime(&in_time_t), "%Y-%m-%d");
-    return ss.str();
-}
-
-std::vector<std::string> parse_tags(const std::string& tags_raw) {
-    std::vector<std::string> tags;
-    if (tags_raw.empty()) return tags;
-
-    std::stringstream ss(tags_raw);
-    std::string item;
-    while (std::getline(ss, item, ',')) {
-        size_t first = item.find_first_not_of(" \t\r\n");
-        if (first != std::string::npos) {
-            size_t last = item.find_last_of(" \t\r\n");
-            std::string trimmed = item.substr(first, (last - first + 1));
-            if (!trimmed.empty()) {
-                tags.push_back(trimmed);
-            }
-        }
-    }
-    return tags;
+void apply_theme(bool is_dark_mode) {
+    if (is_dark_mode) ImGui::StyleColorsDark();
+    else ImGui::StyleColorsLight();
 }
 
 int main() {
@@ -65,9 +27,14 @@ int main() {
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    ImGui::StyleColorsDark();
 
-    // 高DPI検出
+    AppState state;
+    UI_InputForm input_form;
+    UI_StackViewer stack_viewer;
+
+    apply_theme(state.config.is_dark_mode);
+    io.FontGlobalScale = state.config.font_scale;
+
     float base_scale = 1.8f;
 #if GLFW_VERSION_MAJOR > 3 || (GLFW_VERSION_MAJOR == 3 && GLFW_VERSION_MINOR >= 3)
     float xscale = 1.0f, yscale = 1.0f;
@@ -77,39 +44,53 @@ int main() {
 
     ImGuiStyle& style = ImGui::GetStyle();
     style.ScaleAllSizes(base_scale);
-    style.WindowRounding = 6.0f;
-    style.FrameRounding = 4.0f;
-    style.FramePadding = ImVec2(8.0f * base_scale, 6.0f * base_scale);
+    style.WindowRounding = 8.0f;
+    style.FrameRounding = 6.0f;
 
-    // 日本語フォントロード
     float font_size = 18.0f * base_scale;
     static const ImWchar glyph_ranges[] = {
-        0x0020, 0x00FF,
-        0x3000, 0x30FF,
-        0x31F0, 0x31FF,
-        0x4E00, 0x9FAF,
-        0xFF00, 0xFFEF,
-        0,
+        0x0020, 0x00FF, 0x3000, 0x30FF, 0x31F0, 0x31FF, 0x4E00, 0x9FAF, 0xFF00, 0xFFEF, 0,
     };
 
     ImFont* custom_font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\meiryo.ttc", font_size, NULL, glyph_ranges);
-    if (custom_font == nullptr) {
-        custom_font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msgothic.ttc", font_size, NULL, glyph_ranges);
-    }
+    if (!custom_font) custom_font = io.Fonts->AddFontFromFileTTF("C:\\Windows\\Fonts\\msgothic.ttc", font_size, NULL, glyph_ranges);
 
     ImGui_ImplGlfw_InitForOpenGL(window, true);
     ImGui_ImplOpenGL3_Init("#version 130");
 
-    char buf_title[256] = "";
-    char buf_context[2048] = "";
-    char buf_link[512] = "";
-    char buf_tags[256] = "";
-    std::string status_msg = "";
+    bool open_modal_requested = false;
+    bool modal_is_open = false;
+    bool force_close = false;
 
-    const std::string json_path = "../stack.json";
-
-    while (!glfwWindowShouldClose(window)) {
+    while (!force_close) {
         glfwPollEvents();
+
+        // 非同期保存の進捗チェック
+        state.update_async_save();
+
+        // ×ボタンフック
+        if (glfwWindowShouldClose(window) && !force_close) {
+            glfwSetWindowShouldClose(window, GLFW_FALSE); // 閉じる処理を一旦ストップ
+            
+            if (state.is_dirty || state.is_saving) {
+                if (!modal_is_open && !open_modal_requested) {
+                    std::cout << "[DEBUG] Window close requested -> Opening Modal" << std::endl;
+                    open_modal_requested = true;
+                }
+            } else {
+                std::cout << "[DEBUG] Clean state -> Closing window" << std::endl;
+                force_close = true;
+            }
+        }
+
+        // ショートカット
+        if (io.KeyCtrl && !state.is_saving) {
+            if (io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)) {
+                state.redo();
+            } else if (!io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)) {
+                state.undo();
+            }
+        }
 
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
@@ -124,93 +105,74 @@ int main() {
 
         if (custom_font) ImGui::PushFont(custom_font);
 
+        // ヘッダー情報
+        if (state.is_saving) {
+            ImGui::BeginDisabled();
+            ImGui::Button(" Saving... ", ImVec2(160.0f * base_scale, 0));
+            ImGui::EndDisabled();
+        } else {
+            if (state.is_dirty) {
+                ImGui::TextColored(ImVec4(1.0f, 0.8f, 0.2f, 1.0f), "[Unsaved]");
+                ImGui::SameLine();
+            }
+            if (ImGui::Button(" Save & Commit ", ImVec2(160.0f * base_scale, 0))) {
+                state.start_save_and_git("manual save");
+            }
+        }
+
+        if (!state.status_msg.empty()) {
+            ImGui::SameLine();
+            if (state.is_saving) {
+                static float timer = 0.0f;
+                timer += ImGui::GetIO().DeltaTime;
+                int dots = (int)(timer * 4.0f) % 4;
+                std::string dots_str = std::string(dots, '.');
+                ImGui::TextColored(ImVec4(0.3f, 0.8f, 1.0f, 1.0f), "%s%s", state.status_msg.c_str(), dots_str.c_str());
+            } else {
+                ImGui::TextDisabled("(%s)", state.status_msg.c_str());
+            }
+        }
+
+        ImGui::Spacing();
+
         if (ImGui::BeginTabBar("MainTabBar")) {
-
-            if (ImGui::BeginTabItem("Push Context")) {
+            if (ImGui::BeginTabItem("Stack App")) {
                 ImGui::Spacing();
-                
-                ImGui::Text("Title:");
-                ImGui::SetNextItemWidth(-1);
-                ImGui::InputText("##title", buf_title, IM_ARRAYSIZE(buf_title));
+                ImGui::BeginChild("MainScrollView", ImVec2(0, 0), false, ImGuiWindowFlags_AlwaysVerticalScrollbar);
 
-                ImGui::Spacing();
-                ImGui::Text("Context (Multi-line):");
-                ImGui::SetNextItemWidth(-1);
-                ImGui::InputTextMultiline("##context", buf_context, IM_ARRAYSIZE(buf_context), ImVec2(-1, 200.0f * base_scale));
-
-                ImGui::Spacing();
-                ImGui::Text("Link (Optional):");
-                ImGui::SetNextItemWidth(-1);
-                ImGui::InputText("##link", buf_link, IM_ARRAYSIZE(buf_link));
-
-                ImGui::Spacing();
-                ImGui::Text("Tags (comma separated):");
-                ImGui::SetNextItemWidth(-1);
-                ImGui::InputText("##tags", buf_tags, IM_ARRAYSIZE(buf_tags));
+                input_form.Render(state, base_scale);
 
                 ImGui::Spacing();
                 ImGui::Separator();
                 ImGui::Spacing();
 
-                if (ImGui::Button("PUSH TO STACK (Ctrl+Enter)", ImVec2(-1, 50.0f * base_scale)) || 
-                   (io.KeyCtrl && ImGui::IsKeyPressed(ImGuiKey_Enter))) {
-                    
-                    if (std::string(buf_title).empty()) {
-                        status_msg = "Error: Title is required.";
-                    } else {
-                        try {
-                            std::ifstream ifs(json_path);
-                            if (!ifs.is_open()) {
-                                throw std::runtime_error("Cannot open stack.json");
-                            }
-                            json j;
-                            ifs >> j;
-                            ifs.close();
+                stack_viewer.Render(state, base_scale);
 
-                            json new_item;
-                            new_item["id"] = "frame-" + std::to_string(j["stack"].size());
-                            new_item["title"] = std::string(buf_title);
-                            new_item["context"] = std::string(buf_context);
-                            new_item["link"] = std::string(buf_link);
-                            new_item["pushed_at"] = get_current_date();
-                            new_item["tags"] = parse_tags(std::string(buf_tags));
+                ImGui::EndChild();
+                ImGui::EndTabItem();
+            }
 
-                            j["stack"].insert(j["stack"].begin(), new_item);
-                            j["updated_at"] = get_current_time_iso();
-
-                            std::ofstream ofs(json_path);
-                            ofs << j.dump(4) << std::endl;
-                            ofs.close();
-
-                            std::ofstream msg_file("commit_msg.txt");
-                            msg_file << "push: " << buf_title << std::endl;
-                            msg_file.close();
-
-                            std::string git_cmd = "cmd.exe /c \"cd /d .. && git add stack.json && git commit -F app/commit_msg.txt && git push\" > git_output.log 2>&1";
-                            int res = std::system(git_cmd.c_str());
-
-                            std::remove("commit_msg.txt");
-
-                            if (res == 0) {
-                                glfwSetWindowShouldClose(window, GLFW_TRUE);
-                            } else {
-                                std::ifstream log_file("git_output.log");
-                                std::string log_content((std::istreambuf_iterator<char>(log_file)), std::istreambuf_iterator<char>());
-                                if (log_content.empty()) {
-                                    status_msg = "Git push failed (Exit code: " + std::to_string(res) + ")";
-                                } else {
-                                    status_msg = "Git push failed:\n" + log_content;
-                                }
-                            }
-                        } catch (const std::exception& e) {
-                            status_msg = std::string("Error: ") + e.what();
-                        }
-                    }
+            if (ImGui::BeginTabItem("Settings")) {
+                ImGui::Spacing();
+                ImGui::Text("Appearance");
+                ImGui::Separator();
+                
+                if (ImGui::RadioButton("Dark Mode", state.config.is_dark_mode)) {
+                    state.config.is_dark_mode = true;
+                    apply_theme(true);
+                    state.save_config();
+                }
+                ImGui::SameLine();
+                if (ImGui::RadioButton("Light Mode", !state.config.is_dark_mode)) {
+                    state.config.is_dark_mode = false;
+                    apply_theme(false);
+                    state.save_config();
                 }
 
-                if (!status_msg.empty()) {
-                    ImGui::Spacing();
-                    ImGui::TextColored(ImVec4(1.0f, 0.4f, 0.4f, 1.0f), "%s", status_msg.c_str());
+                ImGui::Spacing();
+                if (ImGui::SliderFloat("Font Scale", &state.config.font_scale, 0.7f, 2.0f, "%.2fx")) {
+                    io.FontGlobalScale = state.config.font_scale;
+                    state.save_config();
                 }
 
                 ImGui::EndTabItem();
@@ -219,18 +181,67 @@ int main() {
             ImGui::EndTabBar();
         }
 
-        if (custom_font) ImGui::PopFont();
+        // --- モーダル制御 ---
+        if (open_modal_requested) {
+            std::cout << "[DEBUG] Executing OpenPopup" << std::endl;
+            ImGui::OpenPopup("Save Changes?");
+            open_modal_requested = false;
+            modal_is_open = true;
+        }
 
+        if (ImGui::BeginPopupModal("Save Changes?", NULL, ImGuiWindowFlags_AlwaysAutoResize)) {
+            modal_is_open = true;
+
+            if (state.is_saving) {
+                ImGui::Text("Saving and committing in background...\nPlease wait.");
+            } else if (!state.is_dirty && state.status_msg.find("Saved") != std::string::npos) {
+                // 保存完了を検知して終了
+                std::cout << "[DEBUG] Save complete inside modal -> Force exit" << std::endl;
+                force_close = true;
+                modal_is_open = false;
+                ImGui::CloseCurrentPopup();
+            } else {
+                ImGui::Text("You have unsaved changes.\nDo you want to save before exiting?\n\n");
+                
+                if (ImGui::Button("Yes (Save & Exit)", ImVec2(160 * base_scale, 0))) {
+                    std::cout << "[DEBUG] Clicked 'Yes (Save & Exit)' -> Starting Async Save" << std::endl;
+                    state.start_save_and_git("exit save");
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("No (Exit Without Saving)", ImVec2(200 * base_scale, 0))) {
+                    std::cout << "[DEBUG] Clicked 'No' -> Exiting" << std::endl;
+                    force_close = true;
+                    modal_is_open = false;
+                    ImGui::CloseCurrentPopup();
+                }
+                ImGui::SameLine();
+                if (ImGui::Button("Cancel", ImVec2(100 * base_scale, 0))) {
+                    std::cout << "[DEBUG] Clicked 'Cancel'" << std::endl;
+                    modal_is_open = false;
+                    ImGui::CloseCurrentPopup();
+                }
+            }
+
+            ImGui::EndPopup();
+        } else {
+            modal_is_open = false;
+        }
+
+        if (custom_font) ImGui::PopFont();
         ImGui::End();
 
         ImGui::Render();
         glViewport(0, 0, display_w, display_h);
-        glClearColor(0.09f, 0.09f, 0.10f, 1.0f);
+        if (state.config.is_dark_mode) glClearColor(0.09f, 0.09f, 0.10f, 1.0f);
+        else glClearColor(0.90f, 0.90f, 0.92f, 1.0f);
+        
         glClear(GL_COLOR_BUFFER_BIT);
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 
         glfwSwapBuffers(window);
     }
+
+    std::cout << "[DEBUG] Terminating app" << std::endl;
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();
