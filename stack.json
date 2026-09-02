@@ -1,11 +1,32 @@
 {
     "stack": [
         {
-            "context": "MZVの色々ができるパッケージをjuliaで作ろう！！！\nおそらく私の関わるプロジェクトの中で一番でかいまである\nWord,Index型製作　OK\nいろんな型同士での演算　OK\nshuffle積、stuffle積　OK　高速化もした\n正規化、ロー写像　OK　頑張った\n導分、双対　おそらくOK？　まだ導分や双対にどのようなものがあるのかすべてを把握はしていない\n矢印上下左右　OK\n実数の組にQ上線形従属があるか求めるやつ　-> これはLLL-Inplace.jlで実装\nMZVどうしの線形関係を計算しておく　未完\ndrop1って何　未完\nダイアモンド演算子って何　未完",
-            "id": "frame-6",
-            "link": "https://github.com/YuttariKanata/MzvHoffmanAlgebra.jl",
+            "context": "Eugene go氏のデータベースに圧倒されて、自分の無力さを感じたためやりたい\n2A^4+B^4+C^4=D^4に対しては、かなりmod pで条件が絞れそうな気がしているがどうか...　未完",
+            "id": "frame-13",
+            "link": "https://math.stackexchange.com/questions/5145111/in-order-to-parameterize-more-numerical-solutions-are-requested-for-the-a4b/5145556#5145556",
             "pushed_at": "2026-09-03",
-            "title": "MzvHoffmanAlgebra.jl"
+            "title": "2A^4+B^4+C^4=D^4 もしくは A^4+B^4+C^4+D^4=E^4"
+        },
+        {
+            "context": "めっちゃはやいisqrtを、uint128_tでほしいよねぇ、\nこれはできた。\nじゃあ、めっちゃはやい4乗根を求める関数も、uint128_tでほしいよなぁ　未完",
+            "id": "frame-11",
+            "link": "https://github.com/YuttariKanata/fast_isqrt",
+            "pushed_at": "2026-09-03",
+            "title": "fast_isqrt"
+        },
+        {
+            "context": "mod 2で1と合同で、mod 3で1と2に合同で、mod 5で2と4に合同で、mod 7で1と3と4に合同で、...\nという条件を与えるだけで、いい感じのイテレーターが振ってきていい感じに高速化していただきたい。\n大体　完成\nwheelを複数個持つ　未完\n2次元、多次元化　未完",
+            "id": "frame-10",
+            "link": "https://github.com/YuttariKanata/ConditionalRange",
+            "pushed_at": "2026-09-03",
+            "title": "ConditionalRange"
+        },
+        {
+            "context": "solverの第4世代。世代はこう：\n第一世代・solver\n第二世代・resolve\n第三世代・QykIs\n第四世代・QykIs2\n頑張ってC++で作っちゃうぞ＆どうにか高速化したい。mod pをどれだけうまく使えるか。",
+            "id": "frame-9",
+            "link": "https://github.com/YuttariKanata/QykIs2",
+            "pushed_at": "2026-09-03",
+            "title": "QykIs2"
         },
         {
             "context": "この世は苦しくも10進数なのであります。\nけど世の中の多倍長整数はどうも2進数基数が多い！！おかしい！！\nそれだったら5進数基数の多倍長整数も必要だろ！！！\nという思い。まだ未完",
@@ -22,11 +43,53 @@
             "title": "Excelワンライナーコードエディター"
         },
         {
+            "context": "BesselJ関数の最適な数値計算方法、知りてぇ\n中領域どうするんですか？は？\nというかJuliaに任意精度のBesselJ関数計算ライブラリがないのがおかしいと思う。\nところでpython見てみたら超幾何級数使ってるんですが、ずるくないですか？\nmathlogで各ニューと各xに対して最適な数値計算法を調べる　未完\nJuliaで任意精度BesselJ関数を作る　未完",
+            "id": "frame-14",
+            "link": "https://mathlog.info/articles/2gdZmn0Fw7IKlDzrQBSd",
+            "pushed_at": "2026-09-03",
+            "title": "BesselJ関数"
+        },
+        {
+            "context": "MZVの色々ができるパッケージをjuliaで作ろう！！！\nおそらく私の関わるプロジェクトの中で一番でかいまである\nWord,Index型製作　OK\nいろんな型同士での演算　OK\nshuffle積、stuffle積　OK　高速化もした\n正規化、ロー写像　OK　頑張った\n導分、双対　おそらくOK？　まだ導分や双対にどのようなものがあるのかすべてを把握はしていない\n矢印上下左右　OK\n実数の組にQ上線形従属があるか求めるやつ　-> これはLLL-Inplace.jlで実装\nMZVどうしの線形関係を計算しておく　未完\ndrop1って何　未完\nダイアモンド演算子って何　未完",
+            "id": "frame-6",
+            "link": "https://github.com/YuttariKanata/MzvHoffmanAlgebra.jl",
+            "pushed_at": "2026-09-03",
+            "title": "MzvHoffmanAlgebra.jl"
+        },
+        {
+            "context": "いつぞやかに流行ったパズル。\nn×nマスの盤面で、最小でいくつの碁石を置くとこれ以上置けない盤面になるか？：k_-(n)\nn×nマスの盤面で、最大でいくつの碁石を置くことができるか？：k(n)\nという関数を考えたい\nそしてその解をギャラリーにしたいよぉぉ　未完",
+            "id": "frame-15",
+            "link": "https://x.com/eyV6a3AdWcAoZhY/status/2095286320147153215?s=20",
+            "pushed_at": "2026-09-03",
+            "title": "共円"
+        },
+        {
             "context": "第二ファイゲンバウム定数を100万桁もとめたいという強い願望\nThe second Feigenbaum constant",
             "id": "frame-0",
             "link": "https://en.wikipedia.org/wiki/Feigenbaum_constants",
             "pushed_at": "2026-09-03",
             "title": "第二ファイゲンバウム定数100万桁"
+        },
+        {
+            "context": "自分(Y.K.495, 数値計算bot)が今何のコードに取り組んでいるの？というのを可視化して公表\nそうすることによって自分のモチベを上げたい、、、なんて高尚な思いは無く、\nただただ僕がどれだけ努力しているのか見てほしいだけのカス",
+            "id": "frame-12",
+            "link": "https://github.com/YuttariKanata/interest_stack",
+            "pushed_at": "2026-09-03",
+            "title": "interest_stack [完成]"
+        },
+        {
+            "context": "イヤンホホの文字の遷移の仕方をいい感じに可視化したい",
+            "id": "frame-8",
+            "link": "https://github.com/YuttariKanata/Iyanhoho-visualize",
+            "pushed_at": "2026-09-03",
+            "title": "Iyanhoho-visualize [完成]"
+        },
+        {
+            "context": "reflecminoのパズル、ノーマル、鬼、鬼裏のそれぞれで問題を同じように生成できるようにして、\nさらにその盤面に対して難しさの評価までしてみたい。という思い",
+            "id": "frame-7",
+            "link": "https://github.com/YuttariKanata/reflecmino_rating",
+            "pushed_at": "2026-09-03",
+            "title": "reflecmino_rating [完成]"
         },
         {
             "context": "修正Lentz法なんていくらでも使う機械がある。(断言)\nけど毎回どっちがどの値とかアルゴリズムを思い出すのも面倒なので\n簡単にできるようにするパッケージをつくろう！\nとの思い。無事完成？多分完成",
@@ -50,5 +113,5 @@
             "title": "LLL-Inplace.jl [完成]"
         }
     ],
-    "updated_at": "2026-09-02T21:35:40Z"
+    "updated_at": "2026-09-02T23:19:45Z"
 }
