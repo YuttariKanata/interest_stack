@@ -1,0 +1,8 @@
+# Build output
+app/build/
+.vscode/
+*.exe
+
+# Dependencies (必要に応じて管理外にする場合)
+app/imgui/
+app/single_include/

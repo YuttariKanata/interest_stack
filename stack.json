@@ -1,6 +1,38 @@
 {
     "stack": [
         {
+            "context": "ああ４",
+            "id": "frame-13",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "tags": [],
+            "title": "あ４"
+        },
+        {
+            "context": "けんぴいもは\nかくうのことば素数\n鬱",
+            "id": "frame-12",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "tags": [],
+            "title": "けんぴいも"
+        },
+        {
+            "context": "けんぴいもは\nかくうのことば素数\n鬱",
+            "id": "frame-11",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "tags": [],
+            "title": "けんぴいも"
+        },
+        {
+            "context": "けんぴいもは\nかくうのことば素数\n鬱",
+            "id": "frame-10",
+            "link": "https://ja.wikipedia.org/wiki/イチジク",
+            "pushed_at": "2026-09-03",
+            "tags": [],
+            "title": "けんぴいも"
+        },
+        {
             "context": "コンチネンタル",
             "id": "frame-9",
             "link": "https://ja.wikipedia.org/wiki/イチジク",
@@ -106,5 +138,5 @@
             "title": "ファイゲンバウム定数の高精度計算と分岐図の解析"
         }
     ],
-    "updated_at": "2026-09-02T18:12:50Z"
+    "updated_at": "2026-09-02T18:18:38Z"
 }
