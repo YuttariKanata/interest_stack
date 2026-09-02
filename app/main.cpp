@@ -68,22 +68,20 @@ int main() {
         // 非同期保存の進捗チェック
         state.update_async_save();
 
-        // ×ボタンフック
+        // ×ボタンフック（未保存変更がある場合は閉じずに確認モーダルを開く）
         if (glfwWindowShouldClose(window) && !force_close) {
-            glfwSetWindowShouldClose(window, GLFW_FALSE); // 閉じる処理を一旦ストップ
+            glfwSetWindowShouldClose(window, GLFW_FALSE);
             
             if (state.is_dirty || state.is_saving) {
                 if (!modal_is_open && !open_modal_requested) {
-                    std::cout << "[DEBUG] Window close requested -> Opening Modal" << std::endl;
                     open_modal_requested = true;
                 }
             } else {
-                std::cout << "[DEBUG] Clean state -> Closing window" << std::endl;
                 force_close = true;
             }
         }
 
-        // ショートカット
+        // ショートカット (Ctrl+Z / Ctrl+Shift+Z)
         if (io.KeyCtrl && !state.is_saving) {
             if (io.KeyShift && ImGui::IsKeyPressed(ImGuiKey_Z)) {
                 state.redo();
@@ -105,7 +103,7 @@ int main() {
 
         if (custom_font) ImGui::PushFont(custom_font);
 
-        // ヘッダー情報
+        // ヘッダー情報（Saveボタン & アニメーション付き状態表示）
         if (state.is_saving) {
             ImGui::BeginDisabled();
             ImGui::Button(" Saving... ", ImVec2(160.0f * base_scale, 0));
@@ -181,9 +179,8 @@ int main() {
             ImGui::EndTabBar();
         }
 
-        // --- モーダル制御 ---
+        // --- 未保存終了確認モーダル ---
         if (open_modal_requested) {
-            std::cout << "[DEBUG] Executing OpenPopup" << std::endl;
             ImGui::OpenPopup("Save Changes?");
             open_modal_requested = false;
             modal_is_open = true;
@@ -195,8 +192,7 @@ int main() {
             if (state.is_saving) {
                 ImGui::Text("Saving and committing in background...\nPlease wait.");
             } else if (!state.is_dirty && state.status_msg.find("Saved") != std::string::npos) {
-                // 保存完了を検知して終了
-                std::cout << "[DEBUG] Save complete inside modal -> Force exit" << std::endl;
+                // 保存完了時にアプリを安全に終了
                 force_close = true;
                 modal_is_open = false;
                 ImGui::CloseCurrentPopup();
@@ -204,19 +200,16 @@ int main() {
                 ImGui::Text("You have unsaved changes.\nDo you want to save before exiting?\n\n");
                 
                 if (ImGui::Button("Yes (Save & Exit)", ImVec2(160 * base_scale, 0))) {
-                    std::cout << "[DEBUG] Clicked 'Yes (Save & Exit)' -> Starting Async Save" << std::endl;
                     state.start_save_and_git("exit save");
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("No (Exit Without Saving)", ImVec2(200 * base_scale, 0))) {
-                    std::cout << "[DEBUG] Clicked 'No' -> Exiting" << std::endl;
                     force_close = true;
                     modal_is_open = false;
                     ImGui::CloseCurrentPopup();
                 }
                 ImGui::SameLine();
                 if (ImGui::Button("Cancel", ImVec2(100 * base_scale, 0))) {
-                    std::cout << "[DEBUG] Clicked 'Cancel'" << std::endl;
                     modal_is_open = false;
                     ImGui::CloseCurrentPopup();
                 }
@@ -240,8 +233,6 @@ int main() {
 
         glfwSwapBuffers(window);
     }
-
-    std::cout << "[DEBUG] Terminating app" << std::endl;
 
     ImGui_ImplOpenGL3_Shutdown();
     ImGui_ImplGlfw_Shutdown();

@@ -49,6 +49,11 @@ void AppState::load_all() {
         stack_data = json::object();
         stack_data["stack"] = json::array();
     }
+
+    if (!stack_data.contains("stack") || !stack_data["stack"].is_array()) {
+        stack_data["stack"] = json::array();
+    }
+
     is_dirty = false;
     is_saving = false;
 }
@@ -63,8 +68,12 @@ void AppState::save_config() {
     }
 }
 
+void AppState::touch_updated_at() {
+    stack_data["updated_at"] = get_current_time_iso();
+}
+
 void AppState::push_undo_state() {
-    undo_stack.push_back(stack_data["stack"]);
+    undo_stack.push_back(stack_data); // オブジェクト全体を記録
     redo_stack.clear();
     is_dirty = true;
 }
@@ -72,8 +81,8 @@ void AppState::push_undo_state() {
 bool AppState::undo() {
     if (undo_stack.empty() || is_saving) return false;
     
-    redo_stack.push_back(stack_data["stack"]);
-    stack_data["stack"] = undo_stack.back();
+    redo_stack.push_back(stack_data);
+    stack_data = undo_stack.back();
     undo_stack.pop_back();
     is_dirty = true;
     return true;
@@ -82,8 +91,8 @@ bool AppState::undo() {
 bool AppState::redo() {
     if (redo_stack.empty() || is_saving) return false;
 
-    undo_stack.push_back(stack_data["stack"]);
-    stack_data["stack"] = redo_stack.back();
+    undo_stack.push_back(stack_data);
+    stack_data = redo_stack.back();
     redo_stack.pop_back();
     is_dirty = true;
     return true;
@@ -100,7 +109,6 @@ static int execute_hidden_cmd(const std::string& cmd_str) {
 
     ZeroMemory(&pi, sizeof(pi));
 
-    // CreateProcessA は第一引数か第二引数のバッファを書き換える可能性があるため char 配列にする
     std::vector<char> cmd_buf(cmd_str.begin(), cmd_str.end());
     cmd_buf.push_back('\0');
 
@@ -124,7 +132,7 @@ void AppState::start_save_and_git(const std::string& commit_title) {
 
     is_saving = true;
     status_msg = "Saving & Committing...";
-    stack_data["updated_at"] = get_current_time_iso();
+    touch_updated_at();
 
     json data_to_save = stack_data;
     std::string path_to_json = json_path;
@@ -181,12 +189,14 @@ void AppState::push_item(const std::string& title, const std::string& context, c
     new_item["pushed_at"] = get_current_date();
 
     stack_data["stack"].insert(stack_data["stack"].begin(), new_item);
+    touch_updated_at();
 }
 
 void AppState::delete_item(size_t index) {
     if (index >= stack_data["stack"].size()) return;
     push_undo_state();
     stack_data["stack"].erase(stack_data["stack"].begin() + index);
+    touch_updated_at();
 }
 
 void AppState::edit_item(size_t index, const std::string& title, const std::string& context, const std::string& link) {
@@ -196,6 +206,7 @@ void AppState::edit_item(size_t index, const std::string& title, const std::stri
     stack_data["stack"][index]["title"] = title;
     stack_data["stack"][index]["context"] = context;
     stack_data["stack"][index]["link"] = link;
+    touch_updated_at();
 }
 
 void AppState::reorder_item(size_t from_index, size_t to_index) {
@@ -207,4 +218,5 @@ void AppState::reorder_item(size_t from_index, size_t to_index) {
     auto item = stack_data["stack"][from_index];
     stack_data["stack"].erase(stack_data["stack"].begin() + from_index);
     stack_data["stack"].insert(stack_data["stack"].begin() + to_index, item);
+    touch_updated_at();
 }

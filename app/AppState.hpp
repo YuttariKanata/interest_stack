@@ -20,7 +20,7 @@ public:
     bool is_dirty = false;
     bool is_saving = false; // 保存・Git処理中フラグ
 
-    // メモリ内 Undo / Redo
+    // メモリ内 Undo / Redo（オブジェクト全体を保持して updated_at も巻き戻せるように保持）
     std::vector<json> undo_stack;
     std::vector<json> redo_stack;
 
@@ -39,6 +39,8 @@ public:
     void push_undo_state();
     bool undo();
     bool redo();
+
+    void touch_updated_at(); // updated_at を現在時刻(UTC)に更新
 
     void push_item(const std::string& title, const std::string& context, const std::string& link);
     void delete_item(size_t index);
