@@ -1,6 +1,13 @@
 {
     "stack": [
         {
+            "context": "Drop1とは何かを知る　未完\nNKS三のサイトにあるDrop1のアルゴリズムを理解する　未完\nDrop1を高速化していーなさんに勝つ　未完\n絶対勝つ",
+            "id": "frame-16",
+            "link": "https://infseries.com/content/drop1.html",
+            "pushed_at": "2026-09-04",
+            "title": "Drop1の高速化をしないと気が済まない"
+        },
+        {
             "context": "Eugene go氏のデータベースに圧倒されて、自分の無力さを感じたためやりたい\n2A^4+B^4+C^4=D^4に対しては、かなりmod pで条件が絞れそうな気がしているがどうか...　未完",
             "id": "frame-13",
             "link": "https://math.stackexchange.com/questions/5145111/in-order-to-parameterize-more-numerical-solutions-are-requested-for-the-a4b/5145556#5145556",
@@ -113,5 +120,5 @@
             "title": "LLL-Inplace.jl [完成]"
         }
     ],
-    "updated_at": "2026-09-02T23:19:45Z"
+    "updated_at": "2026-09-03T17:58:52Z"
 }
