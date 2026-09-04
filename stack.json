@@ -1,6 +1,13 @@
 {
     "stack": [
         {
+            "context": "めっちゃはやいisqrtを、uint128_tでほしいよねぇ、\nこれはできた。\nじゃあ、めっちゃはやい4乗根を求める関数も、uint128_tでほしいよなぁ　未完",
+            "id": "frame-11",
+            "link": "https://github.com/YuttariKanata/fast_isqrt",
+            "pushed_at": "2026-09-03",
+            "title": "fast_isqrt"
+        },
+        {
             "context": "Eugene go氏のデータベースに圧倒されて、自分の無力さを感じたためやりたい\n2A^4+B^4+C^4=D^4に対しては、かなりmod pで条件が絞れそうな気がしているがどうか...　未完",
             "id": "frame-13",
             "link": "https://math.stackexchange.com/questions/5145111/in-order-to-parameterize-more-numerical-solutions-are-requested-for-the-a4b/5145556#5145556",
@@ -13,13 +20,6 @@
             "link": "https://infseries.com/content/drop1.html",
             "pushed_at": "2026-09-04",
             "title": "Drop1の高速化をしないと気が済まない"
-        },
-        {
-            "context": "めっちゃはやいisqrtを、uint128_tでほしいよねぇ、\nこれはできた。\nじゃあ、めっちゃはやい4乗根を求める関数も、uint128_tでほしいよなぁ　未完",
-            "id": "frame-11",
-            "link": "https://github.com/YuttariKanata/fast_isqrt",
-            "pushed_at": "2026-09-03",
-            "title": "fast_isqrt"
         },
         {
             "context": "mod 2で1と合同で、mod 3で1と2に合同で、mod 5で2と4に合同で、mod 7で1と3と4に合同で、...\nという条件を与えるだけで、いい感じのイテレーターが振ってきていい感じに高速化していただきたい。\n大体　完成\nwheelを複数個持つ　未完\n2次元、多次元化　未完",
@@ -120,5 +120,5 @@
             "title": "LLL-Inplace.jl [完成]"
         }
     ],
-    "updated_at": "2026-09-03T18:00:15Z"
+    "updated_at": "2026-09-04T11:26:08Z"
 }
