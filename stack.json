@@ -8,6 +8,13 @@
             "title": "fast_isqrt"
         },
         {
+            "context": "mod 2で1と合同で、mod 3で1と2に合同で、mod 5で2と4に合同で、mod 7で1と3と4に合同で、...\nという条件を与えるだけで、いい感じのイテレーターが振ってきていい感じに高速化していただきたい。\n大体　完成\nwheelを複数個持つ　未完\n2次元、多次元化　未完",
+            "id": "frame-10",
+            "link": "https://github.com/YuttariKanata/ConditionalRange",
+            "pushed_at": "2026-09-03",
+            "title": "ConditionalRange"
+        },
+        {
             "context": "Eugene go氏のデータベースに圧倒されて、自分の無力さを感じたためやりたい\n2A^4+B^4+C^4=D^4に対しては、かなりmod pで条件が絞れそうな気がしているがどうか...　未完",
             "id": "frame-13",
             "link": "https://math.stackexchange.com/questions/5145111/in-order-to-parameterize-more-numerical-solutions-are-requested-for-the-a4b/5145556#5145556",
@@ -22,18 +29,18 @@
             "title": "Drop1の高速化をしないと気が済まない"
         },
         {
-            "context": "mod 2で1と合同で、mod 3で1と2に合同で、mod 5で2と4に合同で、mod 7で1と3と4に合同で、...\nという条件を与えるだけで、いい感じのイテレーターが振ってきていい感じに高速化していただきたい。\n大体　完成\nwheelを複数個持つ　未完\n2次元、多次元化　未完",
-            "id": "frame-10",
-            "link": "https://github.com/YuttariKanata/ConditionalRange",
-            "pushed_at": "2026-09-03",
-            "title": "ConditionalRange"
-        },
-        {
             "context": "solverの第4世代。世代はこう：\n第一世代・solver\n第二世代・resolve\n第三世代・QykIs\n第四世代・QykIs2\n頑張ってC++で作っちゃうぞ＆どうにか高速化したい。mod pをどれだけうまく使えるか。",
             "id": "frame-9",
             "link": "https://github.com/YuttariKanata/QykIs2",
             "pushed_at": "2026-09-03",
             "title": "QykIs2"
+        },
+        {
+            "context": "Japanese Shoegazeプレイリストを発見！(見た時点で776曲ある)\nフローチャート、作りたいよねぇ",
+            "id": "frame-17",
+            "link": "https://www.youtube.com/playlist?list=PL0Qf5MRXonbD2VDriN1l4TnTJyyQI3OzG",
+            "pushed_at": "2026-09-18",
+            "title": "Shoegaze, Japan"
         },
         {
             "context": "この世は苦しくも10進数なのであります。\nけど世の中の多倍長整数はどうも2進数基数が多い！！おかしい！！\nそれだったら5進数基数の多倍長整数も必要だろ！！！\nという思い。まだ未完",
@@ -120,5 +127,5 @@
             "title": "LLL-Inplace.jl [完成]"
         }
     ],
-    "updated_at": "2026-09-06T13:03:45Z"
+    "updated_at": "2026-09-18T02:24:23Z"
 }
